@@ -16,6 +16,7 @@ import json
 import re
 import hashlib
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
+from webdriver_manager.chrome import ChromeDriverManager
 
 # ===== Rutas de archivos =====
 ARCHIVO_SALIDA = "D:/Supermercados/BD/IBERIA.csv" 
@@ -219,7 +220,8 @@ def configurar_driver():
     options.add_experimental_option("excludeSwitches", ["enable-logging", "enable-automation"])
     options.add_experimental_option("useAutomationExtension", False)
 
-    driver = webdriver.Chrome(options=options)
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
     driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
         "source": "Object.defineProperty(navigator, 'webdriver', { get: () => undefined })"
     })
@@ -403,7 +405,7 @@ def iberia():
                 print(f"Estado guardado (categoría: {categoria}, página: {page_num + 1})")
                 
                 # Pausa entre páginas
-                time.sleep(random.uniform(1.5, 2.5))
+                #time.sleep(random.uniform(1.5, 2.5))
 
             # Al completar todas las páginas, marcar como completada
             progreso_cat['completada'] = True
@@ -411,7 +413,7 @@ def iberia():
             print(f"Categoría '{categoria}' completada.")
             
             # Pausa entre categorías
-            time.sleep(random.uniform(2, 6))
+            time.sleep(random.uniform(1, 2))
 
     except KeyboardInterrupt:
         print("\nProceso interrumpido por el usuario")

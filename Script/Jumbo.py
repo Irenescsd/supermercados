@@ -15,6 +15,7 @@ from datetime import datetime
 import json
 import re
 import hashlib
+from webdriver_manager.chrome import ChromeDriverManager
 
 # ===== Rutas de archivos =====
 ARCHIVO_SALIDA = "D:/Supermercados/BD/JUMBO.csv" 
@@ -138,7 +139,8 @@ def configurar_driver():
     options.add_experimental_option("excludeSwitches", ["enable-logging", "enable-automation"])
     options.add_experimental_option("useAutomationExtension", False)
 
-    driver = webdriver.Chrome(options=options)
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
     # Ejecuta un script para ocultar la propiedad "navigator.webdriver"
     driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
         "source": "Object.defineProperty(navigator, 'webdriver', { get: () => undefined })"
